@@ -14,6 +14,7 @@ pygame.display.set_caption("Snake Game")
 green = (0, 128, 0)
 black = (0, 0, 0)
 red = (255, 0, 0)
+white = (255, 255, 255)
 game_over = False
 score = 0
 
@@ -23,6 +24,7 @@ y1 = window_height / 2
 x1_change = 0
 y1_change = 0
 
+snake_body = []
 length_of_snake = 1
 
 foodx = round(random.randrange(0, window_width - 10) / 10) * 10.0
@@ -58,6 +60,21 @@ while not game_over:
         game_over = True
     window.fill(black) # to refresh the background
     #write logic outside of the for loop
+    snake_head = []
+    snake_head.append(x1)
+    snake_head.append(y1)
+    snake_body.append(snake_head)
+
+    #logic fto keep from drawing snake body indefinitely
+    if len(snake_body) > length_of_snake:
+        del snake_body[0]
+    #logic for snake hitting itself
+    for segment in snake_body[:-1]:
+        if segment == snake_head:
+            game_over = True
+    font_style = pygame.font.SysFont(None, 50)
+    score_text = font_style.render("Score: " + str(score), True, white)
+    window.blit(score_text, [10, 10])
     #EAT FOOD LOGIC check if the snake and food is in the same
     if x1 == foodx and y1 == foody:
         foodx = round(random.randrange(0, window_width - 10) / 10) * 10.0
@@ -65,7 +82,11 @@ while not game_over:
         length_of_snake += 1
         score += 1
     pygame.draw.rect(window, red, [foodx, foody, 10, 10])
-    pygame.draw.rect(window, green, [x1, y1, 10, 10]) #400 and 300 are where the snake begins in centerpoint. 10, 10 is the size of pixel
+    #loop through list for body logic
+    for segment in snake_body:
+        pygame.draw.rect(window, green, [segment[0], segment[1], 10, 10])
+    # print(snake_body)
+    # pygame.draw.rect(window, green, [x1, y1, 10, 10]) #400 and 300 are where the snake begins in centerpoint. 10, 10 is the size of pixel
     #need to call update for snake to show on window
     pygame.display.update()
-    clock.tick(30) #set framerate
+    clock.tick(24) #set framerate
