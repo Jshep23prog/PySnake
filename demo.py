@@ -16,8 +16,11 @@ game_over = False
 
 x1 = window_width / 2
 y1 = window_height / 2
+
 x1_change = 0
 y1_change = 0
+
+clock = pygame.time.Clock() #Object method to set the framerate
 
 #game loop logic
 while not game_over:
@@ -38,10 +41,15 @@ while not game_over:
             elif event.key == pygame.K_DOWN:
                 x1_change = 0
                 y1_change = +10
+
     x1 = x1 + x1_change
     y1 = y1 + y1_change
+#create game boundaries
+    if x1 >= window_width or x1< 0 or y1 >= window_height or y1< 0:
+        game_over = True
     window.fill(black) # to refresh the background
     #write logic outside of the for loop
     pygame.draw.rect(window, green, [x1, y1, 10, 10]) #400 and 300 are where the snake begins in centerpoint. 10, 10 is the size of pixel
     #need to call update for snake to show on window
     pygame.display.update()
+    clock.tick(30) #set framerate
